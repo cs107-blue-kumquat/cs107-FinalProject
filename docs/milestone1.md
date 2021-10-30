@@ -137,3 +137,6 @@ Lastly, we can increase the publicity of our package by one day building a separ
 
 >  The authors thank the developers of AutomaticDifferentiation (BlueKumquat et al., 2021) for making their > code available on a free and open-source basis.
 
+## Feedback
+
+Only feedback from Sergey was to put a file LICENSE in the root directory of the project. A LICENSE was added in the root directory hereafter. 
