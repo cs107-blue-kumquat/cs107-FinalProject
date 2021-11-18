@@ -109,6 +109,10 @@ cs107-FinalProject\
 
 All tests for the functions that we implemented are in the file `test_autodiff.py`. As TravisCI has stopped working due to billing issue, we are currently switching to GitHub Action and connect Codecov to it to run the tests and show code coverage. The relevant badges are included in the [README.md](https://github.com/cs107-blue-kumquat/cs107-FinalProject/blob/luyu-dev/README.md) on the main project page.
 
+### Installation
+
+Package installation can be found in the **How to use AutomaticDifferentiation Package** section of the milestone2.md file.
+
 ## Implementation
 
 In this project we will create a package for automatic differentiation. Automatic differentiation is not the same as symbolic differentiation nor numerical differentiation. The forward mode of automatic differentiation applies the chain rule to each basic operation and the gradient is obtained by multiplying the individual pieces together. 
