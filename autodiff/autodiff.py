@@ -1,7 +1,7 @@
 import numpy as np
 import re
 
-class elementary_function():
+class Variable():
     def __init__(self, var, der = 1):
         if isinstance(var, int) or isinstance(var, float):
             self.var = var
@@ -22,11 +22,11 @@ class elementary_function():
         try:
            new_add = self.var + other.var
            new_der = self.der + other.der
-           return elementary_function(new_add, new_der)
+           return Variable(new_add, new_der)
         except: 
             if isinstance(other, int) or isinstance(other, float):
                 # other is not a variable and the addition could complete if it is a real number
-                return elementary_function(self.var + other, self.der)
+                return Variable(self.var + other, self.der)
             else:
                 raise TypeError("Input is not a real number.")
 
@@ -35,13 +35,13 @@ class elementary_function():
         try:
             new_mul = other.var * self.var
             new_der = self.der * other.var + other.der * self.var
-            return elementary_function(new_mul, new_der)
+            return Variable(new_mul, new_der)
         except:
             if isinstance(other, int) or isinstance(other, float):
                 # other is not a variable and the multiplication could complete if it is a real number
                 new_mul = other * self.var
                 new_der = self.der * other
-                return elementary_function(new_mul, new_der)
+                return Variable(new_mul, new_der)
             else:
                 raise TypeError("Input is not a real number.")
         
@@ -66,27 +66,27 @@ class elementary_function():
         try:
             new_div = self.var / other.var
             new_der = (self.der * other.var - other.der * self.var) / (other.var)**2
-            return elementary_function(new_div, new_der)
+            return Variable(new_div, new_der)
         except AttributeError:
             new_div = self.var / other
             new_der = self.der / other
-            return elementary_function(new_div, new_der)
+            return Variable(new_div, new_der)
 
 
     def __neg__(self):
-        return elementary_function(-self.var, -self.der)
+        return Variable(-self.var, -self.der)
 
 
     def __rtruediv__(self, other):
         try:
            new_div = other.var / self.var
            new_der = (other.der * self.var - self.der * other.var) / (self.var)**2
-           return elementary_function(new_div, new_der)
+           return Variable(new_div, new_der)
         except AttributeError:
             new_div = self.var / other
             # base has different derivative, not sure of logic
             new_der = self.der / other
-            return elementary_function(new_div, new_der)
+            return Variable(new_div, new_der)
 
 
     def __lt__(self, other):
@@ -129,19 +129,19 @@ class elementary_function():
 
 
     def __abs__(self):
-        return elementary_function(abs(self.var), abs(self.der))
+        return Variable(abs(self.var), abs(self.der))
 
 
     def __pow__(self, other):
         try:
             new_val = self.var ** other.var
             new_der = self.var ** other.var * (np.log(self.var) * other.der / self.der + other.var / self.var)
-            return elementary_function(new_val, new_der)
+            return Variable(new_val, new_der)
         except:
             if isinstance(other, int):
                 new_val = self.var ** other
                 new_der = other * self.var ** (other - 1) * self.der
-                return elementary_function(new_val, new_der)
+                return Variable(new_val, new_der)
             else:
                 raise TypeError(f"Exponent {other} is not valid.")
 
@@ -152,7 +152,7 @@ class elementary_function():
         except:
             raise ValueError("{} must be a number.".format(other))
         new_der = other**self.var * np.log(other)
-        return elementary_function(new_val, new_der)
+        return Variable(new_val, new_der)
 
         
     @staticmethod
@@ -164,7 +164,7 @@ class elementary_function():
             raise TypeError(f"Input not valid.")
         log_var = np.log(var.var)
         log_der = (1. / var.var) * var.der
-        return elementary_function(log_var, log_der)
+        return Variable(log_var, log_der)
 
 
     @staticmethod
@@ -176,8 +176,8 @@ class elementary_function():
                 sqrt_var = var.var**(1/2)
                 sqrt_der = (1/2)*var.var**(-1/2)
             except:
-                raise TypeError(f"Input is not an elementary_function object.")
-        return elementary_function(sqrt_var, sqrt_der)
+                raise TypeError(f"Input is not an Variable object.")
+        return Variable(sqrt_var, sqrt_der)
 
 
     @staticmethod
@@ -185,12 +185,12 @@ class elementary_function():
         try:
             new_val = np.exp(var.var)
             new_der = np.exp(var.var) * var.der
-            return elementary_function(new_val, new_der)
+            return Variable(new_val, new_der)
         except:
             if not isinstance(var, int) and not isinstance(var, float):
                 raise TypeError(f"Input {var} is not valid.")
         
-            return elementary_function(np.exp(var), np.exp(var))
+            return Variable(np.exp(var), np.exp(var))
 
 
     @staticmethod
@@ -198,12 +198,12 @@ class elementary_function():
         try:
             new_val = np.sin(var.var)
             new_der = var.der * np.cos(var.var)
-            return elementary_function(new_val, new_der)
+            return Variable(new_val, new_der)
         except:
             if not isinstance(var, int) and not isinstance(var, float):
                 raise TypeError(f"Input {var} is not valid.")
         
-            return elementary_function(np.sin(var), np.cos(var))
+            return Variable(np.sin(var), np.cos(var))
 
 
     @staticmethod
@@ -211,12 +211,12 @@ class elementary_function():
         try:
             new_val = np.cos(var.var)
             new_der = var.der * -np.sin(var.var)
-            return elementary_function(new_val, new_der)
+            return Variable(new_val, new_der)
         except:
             if not isinstance(var, int) and not isinstance(var, float):
                 raise TypeError(f"Input {var} is not valid.")
         
-            return elementary_function(np.cos(var), -np.sin(var))
+            return Variable(np.cos(var), -np.sin(var))
     
     
     @staticmethod
@@ -224,12 +224,12 @@ class elementary_function():
         try:
             new_val = np.tan(var.var)
             new_der = var.der * 1 / np.power(np.cos(var.var), 2)
-            return elementary_function(new_val, new_der)
+            return Variable(new_val, new_der)
         except:
             if not isinstance(var, int) and not isinstance(var, float):
                 raise TypeError(f"Input {var} is not valid.")
         
-            return elementary_function(np.tan(var), 1/np.cos(var)**2)
+            return Variable(np.tan(var), 1/np.cos(var)**2)
 
 
     @staticmethod
@@ -240,11 +240,11 @@ class elementary_function():
             else:
                 new_val = np.arcsin(var.var)
                 new_der = 1 / np.sqrt(1 - (var.var ** 2))
-                return elementary_function(new_val, new_der)
+                return Variable(new_val, new_der)
         except:
             if not isinstance(var, int) and not isinstance(var, float):
                 raise TypeError(f"Input {var} is not valid.")
-            return elementary_function(np.arcsin(var), 1 / np.sqrt(1 - (var ** 2)))
+            return Variable(np.arcsin(var), 1 / np.sqrt(1 - (var ** 2)))
 
 
     @staticmethod
@@ -258,7 +258,7 @@ class elementary_function():
             else:
                 new_val = np.arccos(var.var)
                 new_der = -1 / np.sqrt(1 - (var.var ** 2))
-            return elementary_function(new_val, new_der)
+            return Variable(new_val, new_der)
         except:
                 raise TypeError(f"Input {var} is not valid.")
 
@@ -269,7 +269,7 @@ class elementary_function():
             new_val = np.arctan(var.var)
             new_der = var.der * 1 / (1 + np.power(var.var, 2))
 
-            return elementary_function(new_val, new_der)
+            return Variable(new_val, new_der)
 
         except AttributeError:
             return np.arctan(var)
@@ -280,7 +280,7 @@ class elementary_function():
         try:
             new_val = np.sinh(var.var)
             new_der = var.der * np.cosh(var.var)
-            return elementary_function(new_val, new_der)
+            return Variable(new_val, new_der)
 
         except AttributeError:
             return np.sinh(var)
@@ -292,7 +292,7 @@ class elementary_function():
             new_val = np.cosh(var.var)
             new_der = var.der * np.sinh(var.var)
 
-            return elementary_function(new_val, new_der)
+            return Variable(new_val, new_der)
 
         except AttributeError:
             return np.cosh(var)
@@ -303,7 +303,7 @@ class elementary_function():
         try:
             new_val = np.tanh(var.var)
             new_der = var.der * 1 / np.power(np.cosh(var.var), 2)
-            return elementary_function(new_val, new_der)
+            return Variable(new_val, new_der)
         except AttributeError:
             return np.tanh(var)
 
@@ -313,7 +313,7 @@ class elementary_function():
         try:
             logistic_var = 1 / (1 + np.exp(-var.var))
             logistic_der = logistic_var * (1-logistic_var) * var.der
-            return elementary_function(logistic_var, logistic_der)
+            return Variable(logistic_var, logistic_der)
         except:
             raise TypeError(f"Input {var} not valid.")
 
@@ -325,7 +325,7 @@ class SimpleAutoDiff:
                 raise TypeError('Invalid function input.')
 
         for key, val in enumerate(dict_val):
-            exec(val + "= elementary_function(dict_val[val])")
+            exec(val + "= Variable(dict_val[val])")
             
         static_elem_funct = ['log', 'sqrt', 'exp', 'sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sinh', 'cosh', 'tanh', 'logistic']
         
@@ -340,7 +340,7 @@ class SimpleAutoDiff:
         for func in list_funct:
             for elem_funct in static_elem_funct:
                 if elem_funct in func: # e.g. log is in log(x)
-                    func = 'elementary_function.' + func
+                    func = 'Variable.' + func
                     break
             self.functions.append(eval(func))
 

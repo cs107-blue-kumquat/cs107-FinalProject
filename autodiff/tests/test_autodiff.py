@@ -4,403 +4,403 @@ from autodiff import *
 
 
 def test_init():
-    x = elementary_function(2)
+    x = Variable(2)
     assert x.var == 2
     assert x.der == 1
     with pytest.raises(TypeError):
-        x = elementary_function("abc")
+        x = Variable("abc")
 
 
 def test_add():
-    # add two elementary_function objects
-    x = elementary_function(1)
-    y = x + elementary_function(2)
+    # add two Variable objects
+    x = Variable(1)
+    y = x + Variable(2)
     assert y.var == 3
     assert y.der == 2
 
-    # add a int/float to elementary_function object
-    x = elementary_function(1)
+    # add a int/float to Variable object
+    x = Variable(1)
     y = x + 2.
     assert y.var == 3
     assert y.der == 1
     
-    # add an invalid type of input to elementary_function object
+    # add an invalid type of input to Variable object
     with pytest.raises(TypeError):
-        x = elementary_function(1)
+        x = Variable(1)
         y = x + "a"
 
 
 def test_neg():
-    x = elementary_function(1)
+    x = Variable(1)
     y = -x
     assert y.var == -1
     assert y.der == -1
 
 
 def test_sub():
-    # subtract two elementary_function objects
-    x = elementary_function(1)
-    y = x - elementary_function(2)
+    # subtract two Variable objects
+    x = Variable(1)
+    y = x - Variable(2)
     assert y.var == -1
     assert y.der == 0
 
-    # subtract a int/float to elementary_function object
-    x = elementary_function(1)
+    # subtract a int/float to Variable object
+    x = Variable(1)
     y = x - 2.
     assert y.var == -1
     assert y.der == 1
     
-    # subtract an invalid type of input with elementary_function object
+    # subtract an invalid type of input with Variable object
     with pytest.raises(TypeError):
-        x = elementary_function(1)
+        x = Variable(1)
         y = x - "a"
 
 
 def test_mul():
-    # multiply two elementary_function objects
-    x = elementary_function(1)
-    y = x * elementary_function(2)
+    # multiply two Variable objects
+    x = Variable(1)
+    y = x * Variable(2)
     assert y.var == 2
     assert y.der == 3
 
-    # multiply a int/float to elementary_function object
-    x = elementary_function(1)
+    # multiply a int/float to Variable object
+    x = Variable(1)
     y = x * 2.
     assert y.var == 2
     assert y.der == 2
     
-    # multiply an invalid type of input with elementary_function object
+    # multiply an invalid type of input with Variable object
     with pytest.raises(TypeError):
-        x = elementary_function(1)
+        x = Variable(1)
         y = x * "a"
 
 
 def test_truediv():
-    # divide two elementary_function objects
-    x = elementary_function(1)
-    y = x / elementary_function(2)
+    # divide two Variable objects
+    x = Variable(1)
+    y = x / Variable(2)
     assert y.var == 1/2
     assert y.der == 1/4
 
-    # divide a int/float by elementary_function object
-    x = elementary_function(1)
+    # divide a int/float by Variable object
+    x = Variable(1)
     y = x / 5.
     assert y.var == 1/5
     assert y.der == 1/5
     
-    # divide elementary_function object by an invalid type of input 
+    # divide Variable object by an invalid type of input 
     with pytest.raises(TypeError):
-        x = elementary_function(1)
+        x = Variable(1)
         y = x / "a"
 
-    # divide elementary_function object by an invalid type of input 
+    # divide Variable object by an invalid type of input 
     with pytest.raises(TypeError):
-        x = elementary_function(1)
+        x = Variable(1)
         y = "a" / x
 
 
 def test_lt():
-    x = elementary_function(1)
-    y = elementary_function(2)
+    x = Variable(1)
+    y = Variable(2)
     assert (x < y) == True
 
-    x = elementary_function(1)
+    x = Variable(1)
     assert (x < 1) == False
 
     with pytest.raises(TypeError):
-        x = elementary_function(1)
+        x = Variable(1)
         check = "a" < x
 
 
 def test_gt():
-    x = elementary_function(1)
-    y = elementary_function(2)
+    x = Variable(1)
+    y = Variable(2)
     assert (y > x) == True
 
-    x = elementary_function(1)
+    x = Variable(1)
     assert (x > 1) == False
 
     with pytest.raises(TypeError):
-        x = elementary_function(1)
+        x = Variable(1)
         check = "a" > x
 
 
 def test_le():
-    x = elementary_function(1)
-    y = elementary_function(2)
+    x = Variable(1)
+    y = Variable(2)
     assert (x <= y) == True
 
-    x = elementary_function(1)
+    x = Variable(1)
     assert (x <= 1) == True
 
     with pytest.raises(TypeError):
-        x = elementary_function(1)
+        x = Variable(1)
         check = "a" <= x
 
 
 def test_ge():
-    x = elementary_function(1)
-    y = elementary_function(2)
+    x = Variable(1)
+    y = Variable(2)
     assert (y >= x) == True
 
-    x = elementary_function(1)
+    x = Variable(1)
     assert (x >= 1) == True
 
     with pytest.raises(TypeError):
-        x = elementary_function(1)
+        x = Variable(1)
         check = "a" >= x
 
 def test_eq():
-    x = elementary_function(1)
-    y = elementary_function(2)
+    x = Variable(1)
+    y = Variable(2)
     assert (y == x) == False
 
     with pytest.raises(TypeError):
-        x = elementary_function(1)
+        x = Variable(1)
         check = x == 1
 
 def test_ne():
-    x = elementary_function(1)
-    y = elementary_function(2)
+    x = Variable(1)
+    y = Variable(2)
     assert (y != x) == True
 
     with pytest.raises(TypeError):
-        x = elementary_function(1)
+        x = Variable(1)
         check = x != 1
 
 
 def test_abs():
-    x = abs(elementary_function(1))
+    x = abs(Variable(1))
     assert x.var == 1
     assert x.der == 1
 
-    y = abs(elementary_function(-2))
+    y = abs(Variable(-2))
     assert y.var == 2
     assert y.der == 1
 
 
 def test_pow():
-    x = elementary_function(2)
+    x = Variable(2)
     y = x ** 4
     assert y.var == 2 ** 4
     assert y.der == 4 * (2 ** 3)
 
-    x = elementary_function(2)
+    x = Variable(2)
     y = x ** -4
     assert y.var == 2 ** -4
     assert y.der == -4 * (2 ** -5)
 
-    x = elementary_function(2)
+    x = Variable(2)
     y = x ** x
     assert y.var == 2 ** 2
     assert y.der == 2 ** 2 * (np.log(2) * 1 / 1 + 2 / 2)
 
-    x = elementary_function(2)
+    x = Variable(2)
     y = x ** (x * 2)
     assert y.var == 2 ** (2 * 2)
     assert y.der == 2 ** (2 * 2) * (np.log(2) * 2 / 1 + (2 * 2) / 2)
 
     with pytest.raises(TypeError):
-        x = elementary_function(1)
+        x = Variable(1)
         check = x ** 1.2
 
     with pytest.raises(TypeError):
-        x = elementary_function(1)
+        x = Variable(1)
         check = x ** -1.2
 
 
 def test_rpow():
-    x = elementary_function(2)
+    x = Variable(2)
     y = 4 ** x
     assert y.var == 4 ** 2
     assert y.der == 4 ** 2 * np.log(4)
 
     with pytest.raises(Exception):
-        x = elementary_function(2)
+        x = Variable(2)
         y = -4 ** x
         assert y.var == 4 ** 2
         assert y.der == 4 ** 2 * np.log(4)
 
-    x = elementary_function(2)
+    x = Variable(2)
     y = 4 ** (x * 2)
     assert y.var == 4 ** (2 * 2)
     assert y.der == 4 ** (2 * 2) * np.log(4)
 
 
 def test_log():
-    x = elementary_function(2)
-    y = elementary_function.log(x)
+    x = Variable(2)
+    y = Variable.log(x)
     assert y.var == np.log(2)
     assert y.der == 1 / 2
 
     with pytest.raises(TypeError):
-        x = elementary_function(-2)
-        y = elementary_function.log(x)
+        x = Variable(-2)
+        y = Variable.log(x)
 
     with pytest.raises(TypeError):
-        y = elementary_function.log(2)
+        y = Variable.log(2)
         assert y.var == np.log(2)
         assert y.der == 1 / 2
 
 
 def test_sqrt():
-    x = elementary_function(2)
-    y = elementary_function.sqrt(x)
+    x = Variable(2)
+    y = Variable.sqrt(x)
     assert y.var == np.sqrt(2)
     assert y.der == 1/2 * 2 ** (-1/2)
 
     with pytest.raises(ValueError):
-        x = elementary_function(-2)
-        y = elementary_function.sqrt(x)
+        x = Variable(-2)
+        y = Variable.sqrt(x)
 
     with pytest.raises(TypeError):
-        y = elementary_function.sqrt("a")
+        y = Variable.sqrt("a")
 
     with pytest.raises(TypeError):
-        y = elementary_function.sqrt(2)
+        y = Variable.sqrt(2)
         assert y.var == np.sqrt(2)
         assert y.der == 1/2 * 2 ** (-1/2)
 
 
 def test_exp():
-    x = elementary_function(2)
-    y = elementary_function.exp(x)
+    x = Variable(2)
+    y = Variable.exp(x)
     assert y.var == np.exp(2)
     assert y.der == np.exp(2)
 
     with pytest.raises(TypeError):
-        y = elementary_function.exp("a")
+        y = Variable.exp("a")
 
-    y = elementary_function.exp(2)
+    y = Variable.exp(2)
     assert y.var == np.exp(2)
     assert y.der == np.exp(2)
 
 
 def test_sin():
-    x = elementary_function(np.pi/2)
-    y = elementary_function.sin(x)
+    x = Variable(np.pi/2)
+    y = Variable.sin(x)
     assert y.var == np.sin(np.pi/2)
     assert y.der == np.cos(np.pi/2)
 
     with pytest.raises(TypeError):
-        y = elementary_function.sin("a")
+        y = Variable.sin("a")
 
-    y = elementary_function.sin(np.pi/2)
+    y = Variable.sin(np.pi/2)
     assert y.var == np.sin(np.pi/2)
     assert y.der == np.cos(np.pi/2)
 
 
 def test_cos():
-    x = elementary_function(np.pi/2)
-    y = elementary_function.cos(x)
+    x = Variable(np.pi/2)
+    y = Variable.cos(x)
     assert y.var == np.cos(np.pi/2)
     assert y.der == -np.sin(np.pi/2)
 
     with pytest.raises(TypeError):
-        y = elementary_function.cos("a")
+        y = Variable.cos("a")
 
-    y = elementary_function.cos(np.pi)
+    y = Variable.cos(np.pi)
     assert y.var == np.cos(np.pi)
     assert y.der == -np.sin(np.pi)
 
 
 def test_tan():
-    x = elementary_function(np.pi/3)
-    y = elementary_function.tan(x)
+    x = Variable(np.pi/3)
+    y = Variable.tan(x)
     assert y.var == np.tan(np.pi/3)
     assert y.der == 1/np.cos(np.pi/3)**2
 
     with pytest.raises(TypeError):
-        y = elementary_function.cos("a")
+        y = Variable.cos("a")
 
-    y = elementary_function.tan(np.pi/3)
+    y = Variable.tan(np.pi/3)
     assert y.var == np.tan(np.pi/3)
     assert y.der == 1/np.cos(np.pi/3)**2
 
 
 def test_arcsin():
-    x = elementary_function(1/2)
-    y = elementary_function.arcsin(x)
+    x = Variable(1/2)
+    y = Variable.arcsin(x)
     assert y.var == np.arcsin(1/2)
     assert y.der == 1 / np.sqrt(1 - (1/2) ** 2)
 
     with pytest.raises(TypeError):
-        y = elementary_function.arcsin("a")
+        y = Variable.arcsin("a")
 
-    y = elementary_function.arcsin(1/2)
+    y = Variable.arcsin(1/2)
     assert y.var == np.arcsin(1/2)
     assert y.der == 1 / np.sqrt(1 - (1/2) ** 2)
 
 
 def test_arccos():
-    x = elementary_function(1/2)
-    y = elementary_function.arccos(x)
+    x = Variable(1/2)
+    y = Variable.arccos(x)
     assert y.var == np.arccos(1/2)
     assert y.der == -1 / np.sqrt(1 - (1/2) ** 2)
 
     with pytest.raises(TypeError):
-        y = elementary_function.arccos("a")
+        y = Variable.arccos("a")
 
-    assert elementary_function.arccos(1/2) == np.arccos(1/2)
+    assert Variable.arccos(1/2) == np.arccos(1/2)
 
-    # x = elementary_function(2)
+    # x = Variable(2)
     # with pytest.raises(ValueError):
-    #     y = elementary_function.arccos(x)
+    #     y = Variable.arccos(x)
 
 
 def test_arctan():
-    x = elementary_function(1/2)
-    y = elementary_function.arctan(x)
+    x = Variable(1/2)
+    y = Variable.arctan(x)
     assert y.var == np.arctan(1/2)
     assert y.der == 1 / (1 + np.power(1/2, 2))
 
     with pytest.raises(TypeError):
-        y = elementary_function.arctan("a")
+        y = Variable.arctan("a")
 
-    assert elementary_function.arctan(1/2) == np.arctan(1/2)
+    assert Variable.arctan(1/2) == np.arctan(1/2)
 
 
 def test_sinh():
-    x = elementary_function(1/2)
-    y = elementary_function.sinh(x)
+    x = Variable(1/2)
+    y = Variable.sinh(x)
     assert y.var == np.sinh(1/2)
     assert y.der == np.cosh(1/2)
 
     with pytest.raises(TypeError):
-        y = elementary_function.sinh("a")
+        y = Variable.sinh("a")
 
-    assert elementary_function.sinh(1/2) == np.sinh(1/2)
+    assert Variable.sinh(1/2) == np.sinh(1/2)
 
 
 def test_cosh():
-    x = elementary_function(1/2)
-    y = elementary_function.cosh(x)
+    x = Variable(1/2)
+    y = Variable.cosh(x)
     assert y.var == np.cosh(1/2)
     assert y.der == np.sinh(1/2)
 
     with pytest.raises(TypeError):
-        y = elementary_function.cosh("a")
+        y = Variable.cosh("a")
 
-    assert elementary_function.cosh(1/2) == np.cosh(1/2)
+    assert Variable.cosh(1/2) == np.cosh(1/2)
 
 
 def test_tanh():
-    x = elementary_function(1/2)
-    y = elementary_function.tanh(x)
+    x = Variable(1/2)
+    y = Variable.tanh(x)
     assert y.var == np.tanh(1/2)
     assert y.der == 1 / np.cosh(1/2) ** 2
 
     with pytest.raises(TypeError):
-        y = elementary_function.tanh("a")
+        y = Variable.tanh("a")
 
-    assert elementary_function.tanh(1/2) == np.tanh(1/2)
+    assert Variable.tanh(1/2) == np.tanh(1/2)
 
 
 def test_logistic():
-    x = elementary_function(2)
-    y = elementary_function.logistic(x)
+    x = Variable(2)
+    y = Variable.logistic(x)
     assert y.var == 1 / (1 + np.exp(-2))
     assert y.der == 1 / (1 + np.exp(-2)) * (1 - 1 / (1 + np.exp(-2))) * x.der
 
     with pytest.raises(TypeError):
-        y = elementary_function.logistic("a")
+        y = Variable.logistic("a")
