@@ -3,6 +3,12 @@ import re
 
 class Variable():
     def __init__(self, var, der = 1):
+        """
+        Attributes:
+        var: attribute representing evaluated value 
+        der: attribute representing evaluated derivative/gradient
+        
+        """
         if isinstance(var, int) or isinstance(var, float):
             self.var = var
             self.der = der
@@ -320,6 +326,45 @@ class Variable():
 
 class SimpleAutoDiff: 
     def __init__(self, dict_val, list_funct):
+        """
+        How To Use SimpleAutoDiff
+        ---------------------------------------------------------------------------------------------------------------------
+    
+        Inputs:
+        
+        dict_val: a dictionary object
+        dict_val represents the input which is a dictionary of variables and their values formatted like the examples below
+        example1={'x':7,'y':2, 'z':3}
+        example2 ={'x':4}
+        You can input as many variables as needed so long as it is more than 1
+        
+        list_funct: a list object
+        list_funct represents the input which is a list of functions input as strings
+        example_a = ['x**2','cos(np.pi*y)', '8*z']
+        example_b = ['sin(x)']
+        
+        An example of a sample return using dict_val example1 and list_funct example_a would be 
+        
+        ---AutoDifferentiation---
+        Value: {'x': 7, 'y': 2, 'z': 3}
+
+        Function 1: 
+        Expression = x**2
+        Value = 49
+        Gradient = 14
+
+        Function 2: 
+        Expression = cos(np.pi*y)
+        Value = 1.0
+        Gradient = 7.694682774887159e-16
+
+        Function 3: 
+        Expression = 8*z
+        Value = 24
+        Gradient = 8
+        ---------------------------------------------------------------------------------------------------------------------
+        
+        """
         for func in list_funct:
             if not isinstance(func, str):
                 raise TypeError('Invalid function input.')
