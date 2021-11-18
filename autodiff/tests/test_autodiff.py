@@ -103,6 +103,16 @@ def test_mul():
     assert y.var == 2
     assert y.der == 2
 
+    x = Variable(1)
+    y = x * -2.
+    assert y.var == -2
+    assert y.der == -2
+    
+    x = Variable(1)
+    y = -2. * x
+    assert y.var == -2
+    assert y.der == -2
+
     # multiply an invalid type of input with Variable object
     with pytest.raises(TypeError):
         x = Variable(1)
@@ -284,6 +294,10 @@ def test_log():
         y = Variable.log(x)
 
     with pytest.raises(TypeError):
+        x = Variable(-2)
+        y = Variable.log(2 * x)
+
+    with pytest.raises(TypeError):
         y = Variable.log(2)
         assert y.var == np.log(2)
         assert y.der == 1 / 2
@@ -294,6 +308,11 @@ def test_sqrt():
     y = Variable.sqrt(x)
     assert y.var == np.sqrt(2)
     assert y.der == 1/2 * 2 ** (-1/2)
+
+    x = Variable(2)
+    y = Variable.sqrt(2 * x)
+    assert y.var == np.sqrt(2 * 2)
+    assert y.der == 1/ np.sqrt(2) * 1/2 * 2 ** (-1/2)
 
     with pytest.raises(ValueError):
         x = Variable(-2)
@@ -314,6 +333,11 @@ def test_exp():
     assert y.var == np.exp(2)
     assert y.der == np.exp(2)
 
+    x = Variable(2)
+    y = Variable.exp(2 * x)
+    assert y.var == np.exp(2 * 2)
+    assert y.der == 2 * np.exp(2 * 2)
+
     with pytest.raises(TypeError):
         y = Variable.exp("a")
 
@@ -327,6 +351,11 @@ def test_sin():
     y = Variable.sin(x)
     assert y.var == np.sin(np.pi/2)
     assert y.der == np.cos(np.pi/2)
+
+    x = Variable(np.pi/2)
+    y = Variable.sin(2 * x)
+    assert y.var == np.sin(2 * np.pi/2)
+    assert y.der == 2 * np.cos(2 * np.pi/2)
 
     with pytest.raises(TypeError):
         y = Variable.sin("a")
@@ -442,11 +471,11 @@ def test_tanh():
     assert Variable.tanh(1/2) == np.tanh(1/2)
 
 
-def test_logistic():
+def test_sigmoid():
     x = Variable(2)
-    y = Variable.logistic(x)
+    y = Variable.sigmoid(x)
     assert y.var == 1 / (1 + np.exp(-2))
     assert y.der == 1 / (1 + np.exp(-2)) * (1 - 1 / (1 + np.exp(-2))) * x.der
 
     with pytest.raises(TypeError):
-        y = Variable.logistic("a")
+        y = Variable.sigmoid("a")

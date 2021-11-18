@@ -309,8 +309,7 @@ class Variable():
             return np.tanh(var)
 
 
-    @staticmethod
-    def logistic(var):
+    def sigmoid(var):
         try:
             logistic_var = 1 / (1 + np.exp(-var.var))
             logistic_der = logistic_var * (1-logistic_var) * var.der
