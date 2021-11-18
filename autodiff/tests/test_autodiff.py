@@ -276,7 +276,6 @@ def test_rpow():
         x = Variable(2)
         y = -4 ** x
         assert y.var == 4 ** 2
-        assert y.der == 4 ** 2 * np.log(4)
 
     x = Variable(2)
     y = 4 ** (x * 2)
@@ -308,8 +307,6 @@ def test_log():
 
     with pytest.raises(TypeError):
         y = Variable.log(2)
-        assert y.var == np.log(2)
-        assert y.der == 1 / 2
 
 
 def test_sqrt():
@@ -332,8 +329,6 @@ def test_sqrt():
 
     with pytest.raises(TypeError):
         y = Variable.sqrt(2)
-        assert y.var == np.sqrt(2)
-        assert y.der == 1/2 * 2 ** (-1/2)
 
 
 def test_exp():

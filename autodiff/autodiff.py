@@ -331,7 +331,7 @@ class SimpleAutoDiff:
         for key, val in enumerate(dict_val):
             exec(val + "= Variable(dict_val[val])")
             
-        static_elem_funct = ['log', 'sqrt', 'exp', 'sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sinh', 'cosh', 'tanh', 'logistic']
+        static_elem_funct = ['log', 'sqrt', 'exp', 'sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sinh', 'cosh', 'tanh', 'sigmoid']
         
 
         self.dict_val = dict_val
