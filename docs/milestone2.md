@@ -119,17 +119,17 @@ In this project we will create a package for automatic differentiation. Automati
 
 ### What are the core data structures?
 
-The core data structures are dependent on how we choose to implement the forward mode of automatic differentiation. If implemented using a tuple method where each $v_i$ and $D_p v_i$ are stored but updated since we know that once a child node is evaluated then its parent node(s) are no longer needed so long as there are no more child nodes to be evaluated for those parent nodes. This would be best used in functions of f with a sole output. 
-
-If implemented using dual numbers we would want to create a class in the same manner we reviewed creating a class for complex variables in class that would store the real part of the value $v_i$ as the primal trace which is best visualized in a computational graph and the dual part is the part corresponding to the tangent trace. This method of implementation would allow us to store values for $v_i$s and it will allow us to access the real part and the dual part and allow us to adjust how operations would best be implemented to service our user.
-
-If implemented using the Jacobian, we would want to store partials as a matrix or vector and p as a seed vector, then we could access different values given what we set our seed vector p to be. Our forward mode automatic differentiation would compute the dot product of our Jacobian matrix and seed vector $\mathbf{p}$. 
+The core data structures are dependent on how we chose to implement the forward mode of automatic differentiation. We chose to implement the forward mode of automatic differentiation using dual numbers.  In this implementation we used 2 classes.  
 
 The core classes are:
 
 - `Variable`
 
 - `SimpleAutoDiff`
+
+**The Variable Class:**
+We implemented using a dual numbers class called Variable, we created a class in the same manner we reviewed creating a class for complex variables in class that would store the real part of the value and can be accessed through attribute .var  and the derivative through attribute .der (for example, with a dual number object x, x.var has the real value and x.der  has the derivative of x, where if x is a scalar, is just 1). This method of implementation allows us to store values for and access the real part and the dual part and allowed us to adjust how operations would best be implemented to service our user.
+
 
 Here are the functions that we have implemented in the forward mode. We used `numpy` package to evaluate all elementary functions. 
 
@@ -167,6 +167,17 @@ Here are the functions that we have implemented in the forward mode. We used `nu
 - `arcsin`,  `arccos`, `arctan ` (Inverse trig functions)
 - `sinh`,  `cosh`, `tanh` (Hyperbolic functions)
 - `logistic` (Logistic function)
+
+**The SimpleAutoDiff Class:**
+
+This class takes in inputs of a dictionary of variable names and their values, and a list of functions. The dictionary format takes in variable names as strings and their values. The list of functions takes in functions as strings.  Within SimpleAutoDiff, the string and corresponding value are transformed to Variable objects that are used when each function is evaluated. 
+
+The output of a SimpleAutoDiff object if printed would print the dictionary of values followed by the Function number,  Expression, Function Value and Function Gradient for each function in the list of functions. 
+
+![Drawing2](https://tva1.sinaimg.cn/large/008i3skNgy1gvmvhlerqej61h90u0t9l02.jpg)
+
+The reason this class is called SimpleAutoDiff is because currently it only works for functions of one variable however it can handle multiple functions.  In the future we hope to further our class so it can handle functions of more than one variable and return the partial derivatives with respect to each variable.  We also hope to implement a Jacobian attribute that would return a Jacobian of size n (representing the number of functions) by m (representing the number of variables) that has the partial derivatives for each function with respect to each variable in the dictionary of variables.  With this attribute users would be able to use the Jacobian from our class with Newton’s method and others. 
+
 
 ## Future Features
 
