@@ -1,5 +1,5 @@
 import numpy as np
-
+import re
 
 class elementary_function():
     def __init__(self, var, der = 1):
@@ -160,7 +160,7 @@ class elementary_function():
         try:
             if var.var <= 0:
                 raise ValueError('Input needs to be greater than 0.')
-        except :
+        except:
             raise TypeError(f"Input not valid.")
         log_var = np.log(var.var)
         log_der = (1. / var.var) * var.der
@@ -169,170 +169,196 @@ class elementary_function():
 
     @staticmethod
     def sqrt(var):
-      if var < 0:
-        raise ValueError("square root must take positive number")
-      else:
+        if var < 0:
+            raise ValueError("Square root only takes positive number in the current implementation.")
+        else:
+            try:
+                sqrt_var = var.var**(1/2)
+                sqrt_der = (1/2)*var.var**(-1/2)
+            except:
+                raise TypeError(f"Input is not an elementary_function object.")
+        return elementary_function(sqrt_var, sqrt_der)
+
+
+    @staticmethod
+    def exp(var):
         try:
-          return elementary_function(var.var**(1/2), (1/2)*var.var**(-1/2))
-        except AttributeError:
-          return elementary_function(var**(1/2), (1/2)*var**(-1/2))
-
-
-
-    @staticmethod
-    def exp(self):
-
-      try:
-        new_val = np.exp(var.var)
-        new_der = np.exp(var.var) * var.der
-        return Variable(new_val, new_der)
-
-      except AttributeError:
-        return np.exp(var)
+            new_val = np.exp(var.var)
+            new_der = np.exp(var.var) * var.der
+            return elementary_function(new_val, new_der)
+        except:
+            if not isinstance(var, int) and not isinstance(var, float):
+                raise TypeError(f"Input {var} is not valid.")
+        
+            return elementary_function(np.exp(var), np.exp(var))
 
 
     @staticmethod
-    def sin(self):
-      try:
-        new_val = np.sin(var.var)
-        new_der = var.der * np.cos(var.var)
-        return Variable(new_val, new_der)
-
-      except AttributeError:
-        return np.sin(var)
-
-
-    @staticmethod
-    def cos(self):
+    def sin(var):
         try:
-          new_val = np.cos(self.var)
-          new_der = self.der * -np.sin(self.var)
-          return elementary_function(new_val, new_der)
+            new_val = np.sin(var.var)
+            new_der = var.der * np.cos(var.var)
+            return elementary_function(new_val, new_der)
+        except:
+            if not isinstance(var, int) and not isinstance(var, float):
+                raise TypeError(f"Input {var} is not valid.")
+        
+            return elementary_function(np.sin(var), np.cos(var))
 
-        except AttributeError:
-            return np.cos(var)
+
+    @staticmethod
+    def cos(var):
+        try:
+            new_val = np.cos(var.var)
+            new_der = var.der * -np.sin(var.var)
+            return elementary_function(new_val, new_der)
+        except:
+            if not isinstance(var, int) and not isinstance(var, float):
+                raise TypeError(f"Input {var} is not valid.")
+        
+            return elementary_function(np.cos(var), -np.sin(var))
     
     
     @staticmethod
-    def tan(self):
-        new_val = np.tan(self.var)
-        new_der = variable.der * 1 / np.power(np.cos(variable.var), 2)
-        return elementary_function(new_var, new_der)
-
-    @staticmethod
-    def arcsin(self):
+    def tan(var):
         try:
-            if self.var>1 or self.var <-1:
-               raise ValueError('Please input -1 <= x <=1')
-            else:
-                new_var = np.arcsin(self.var)
-                new_der = 1 / np.sqrt(1 - (self.var ** 2))
-            return elementary_function(new_var, new_der) 
-        except AttributeError:
-            return np.arcsin(var)
+            new_val = np.tan(var.var)
+            new_der = var.der * 1 / np.power(np.cos(var.var), 2)
+            return elementary_function(new_val, new_der)
+        except:
+            if not isinstance(var, int) and not isinstance(var, float):
+                raise TypeError(f"Input {var} is not valid.")
+        
+            return elementary_function(np.tan(var), 1/np.cos(var)**2)
 
 
     @staticmethod
-    def arccos(self):
+    def arcsin(var):
         try:
-            if self.var>1 or self.var <-1:
+            if var.var > 1 or var.var < -1:
                 raise ValueError('Please input -1 <= x <=1')
-
             else:
-                new_var = np.arcsin(self.var)
-                new_der = -1 / np.sqrt(1 - (self.var ** 2))
-            return elementary_function(new_var, new_der)
-        except AttributeError:
-            return np.arccos(var)
+                new_val = np.arcsin(var.var)
+                new_der = 1 / np.sqrt(1 - (var.var ** 2))
+                return elementary_function(new_val, new_der)
+        except:
+            if not isinstance(var, int) and not isinstance(var, float):
+                raise TypeError(f"Input {var} is not valid.")
+            return elementary_function(np.arcsin(var), 1 / np.sqrt(1 - (var ** 2)))
 
 
     @staticmethod
-    def arctan(self):
+    def arccos(var):
         try:
-            new_var = np.arctan(self.var)
-            new_der = self.der * 1 / (1 + np.power(self.var, 2))
+            if isinstance(var, int) or isinstance(var, float):
+                return np.arccos(var)
 
-            return elementary_function(new_var, new_der)
+            if var.var > 1 or var.var < -1:
+                raise ValueError('Please input -1 <= x <=1')
+            else:
+                new_val = np.arccos(var.var)
+                new_der = -1 / np.sqrt(1 - (var.var ** 2))
+            return elementary_function(new_val, new_der)
+        except:
+                raise TypeError(f"Input {var} is not valid.")
+
+
+    @staticmethod
+    def arctan(var):
+        try:
+            new_val = np.arctan(var.var)
+            new_der = var.der * 1 / (1 + np.power(var.var, 2))
+
+            return elementary_function(new_val, new_der)
 
         except AttributeError:
             return np.arctan(var)
 
 
     @staticmethod
-    def sinh(self):
+    def sinh(var):
         try:
-            new_var = np.sinh(self.var)
-            new_der = self.der * np.cosh(self.var)
-
-            return elementary_function(new_var, new_der)
+            new_val = np.sinh(var.var)
+            new_der = var.der * np.cosh(var.var)
+            return elementary_function(new_val, new_der)
 
         except AttributeError:
-            return np.sinh(car)
+            return np.sinh(var)
 
 
     @staticmethod
-    def cosh(self):
+    def cosh(var):
         try:
-            new_var = np.cosh(self.var)
-            new_der = self.der * np.sinh(self.var)
+            new_val = np.cosh(var.var)
+            new_der = var.der * np.sinh(var.var)
 
-            return elementary_function(new_var, new_der)
+            return elementary_function(new_val, new_der)
 
         except AttributeError:
             return np.cosh(var)
 
 
     @staticmethod
-    def tanh(self):
+    def tanh(var):
         try:
-            new_var = np.tanh(self.var)
-            new_der = self.der * 1 / np.power(np.cosh(self.var), 2)
-
-            tanh = elementary_function(new_var, new_der)
-            return tanh
-
+            new_val = np.tanh(var.var)
+            new_der = var.der * 1 / np.power(np.cosh(var.var), 2)
+            return elementary_function(new_val, new_der)
         except AttributeError:
             return np.tanh(var)
 
 
-    class SimpleAutoDiff: 
-        def __init__(self, dict_val, list_funct):
-
-        #     self.functions=np.array(len(dict_val))
-        #     self.variables=np.array(len(list_funct))
-
-            for key,val in enumerate(dict_val):
-                str1= 'temp_'+val
-                exec("%s = %d" % (str1,dict_val[val]))
-
-            for key,val in enumerate(dict_val):
-                str2= val
-                exec(str2+"= elementary_function(dict_val[val])")
-                print(str2+"= elementary_function(dict_val[val])")
-            static_elem_funct = ['log', 'sqrt', 'exp', 'sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sinh', 'cosh', 'tanh']
-
-            n = len(list_funct)
-            self.n = n
+    @staticmethod
+    def logistic(var):
+        try:
+            logistic_var = 1 / (1 + np.exp(-var.var))
+            logistic_der = logistic_var * (1-logistic_var) * var.der
+            return elementary_function(logistic_var, logistic_der)
+        except:
+            raise TypeError(f"Input {var} not valid.")
 
 
-            #code to parse the strings in the list of functions
-            global parsed_funct
-            parsed_funct=[]
-            len_list_funct = len(list_funct)
-            #loop through all functions in argument list
-            for funct in range(0,len_list_funct):
-            #the eval function evaluates the “String” like a python expression and returns the result as an integer.
-                parsed_funct.append(eval(list_funct[funct]))
-            self.functions = parsed_funct
+class SimpleAutoDiff: 
+    def __init__(self, dict_val, list_funct):
+        for func in list_funct:
+            if not isinstance(func, str):
+                raise TypeError('Invalid function input.')
 
+        for key, val in enumerate(dict_val):
+            exec(val + "= elementary_function(dict_val[val])")
+            
+        static_elem_funct = ['log', 'sqrt', 'exp', 'sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sinh', 'cosh', 'tanh', 'logistic']
+        
 
+        self.dict_val = dict_val
+        self.list_funct = list_funct
+        self.functions = []
+
+        len_list_funct = len(list_funct)
+
+        # loop through all functions in argument list
+        for func in list_funct:
+            for elem_funct in static_elem_funct:
+                if elem_funct in func: # e.g. log is in log(x)
+                    func = 'elementary_function.' + func
+                    break
+            self.functions.append(eval(func))
+
+    
     def __repr__ (self):
-        #include formated print statements here
-        ret_string = ""
-        return ret_string
+        output = '---AutoDifferentiation---\n'
+        added_output = ''
+        added_output += f"Value: {self.dict_val}\n\n"
+        for i in range(0, len(self.functions)):
+            added_output += f"Function {i+1}: \nExpression = {self.list_funct[i]}\nValue = {str(self.functions[i].var)}\nGradient = {str(self.functions[i].der)}\n\n"
+
+        return output+added_output
+
     def __str__(self):
         output = '---AutoDifferentiation---\n'
-        added_output=' '
-        for i in range(0,self.n):
-            added_output +='Function'+str(i+1)+' Value:'+str(parsed_funct[i].var)+' and ''Function'+str(i+1)+' Gradient:'+str(parsed_funct[i].der)+'\n'
-        return output+added_output
+        added_output = ''
+        added_output += f"Value: {self.dict_val}\n\n"
+        for i in range(0, len(self.functions)):
+            added_output += f"Function {i+1}: \nExpression = {self.list_funct[i]}\nValue = {str(self.functions[i].var)}\nGradient = {str(self.functions[i].der)}\n\n"
+
+        return output + added_output
