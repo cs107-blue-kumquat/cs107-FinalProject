@@ -2,12 +2,28 @@ import pytest
 import numpy as np
 from autodiff.autodiff import *
 
+
 def test_init():
     x = Variable(2)
     assert x.var == 2
     assert x.der == 1
+
+    x = Variable(2.)
+    assert x.var == 2
+    assert x.der == 1
+
     with pytest.raises(TypeError):
         x = Variable("abc")
+
+
+def test_str():
+    x = Variable(2)
+    assert str(x) == "value = 2, derivative = 1"
+
+
+def test_repr():
+    x = Variable(2)
+    assert repr(x) == "value = 2, derivative = 1"
 
 
 def test_add():
@@ -16,6 +32,12 @@ def test_add():
     y = x + Variable(2)
     assert y.var == 3
     assert y.der == 2
+
+    # add a int/float to Variable object
+    x = Variable(1)
+    y = 2. + x 
+    assert y.var == 3
+    assert y.der == 1
 
     # add a int/float to Variable object
     x = Variable(1)
@@ -28,6 +50,9 @@ def test_add():
         x = Variable(1)
         y = x + "a"
 
+    with pytest.raises(TypeError):
+        x = Variable(1)
+        y = "a" + x
 
 def test_neg():
     x = Variable(1)
@@ -49,6 +74,11 @@ def test_sub():
     assert y.var == -1
     assert y.der == 1
     
+    x = Variable(1)
+    y = 2. - x
+    assert y.var == 1
+    assert y.der == -1
+
     # subtract an invalid type of input with Variable object
     with pytest.raises(TypeError):
         x = Variable(1)
@@ -68,6 +98,11 @@ def test_mul():
     assert y.var == 2
     assert y.der == 2
     
+    x = Variable(1)
+    y = 2. * x
+    assert y.var == 2
+    assert y.der == 2
+
     # multiply an invalid type of input with Variable object
     with pytest.raises(TypeError):
         x = Variable(1)
@@ -83,16 +118,21 @@ def test_truediv():
 
     # divide a int/float by Variable object
     x = Variable(1)
+    y = 5. / x
+    assert y.var == 5
+    assert y.der == 5
+  
+    # divide a int/float by Variable object
+    x = Variable(1)
     y = x / 5.
     assert y.var == 1/5
     assert y.der == 1/5
-    
+
     # divide Variable object by an invalid type of input 
     with pytest.raises(TypeError):
         x = Variable(1)
         y = x / "a"
 
-    # divide Variable object by an invalid type of input 
     with pytest.raises(TypeError):
         x = Variable(1)
         y = "a" / x
@@ -149,14 +189,16 @@ def test_ge():
         x = Variable(1)
         check = "a" >= x
 
+
 def test_eq():
     x = Variable(1)
     y = Variable(2)
     assert (y == x) == False
-
+ 
     with pytest.raises(TypeError):
         x = Variable(1)
         check = x == 1
+
 
 def test_ne():
     x = Variable(1)
@@ -230,6 +272,11 @@ def test_log():
     x = Variable(2)
     y = Variable.log(x)
     assert y.var == np.log(2)
+    assert y.der == 1 / 2
+
+    x = Variable(2)
+    y = Variable.log(2 * x)
+    assert y.var == 2 * np.log(2)
     assert y.der == 1 / 2
 
     with pytest.raises(TypeError):

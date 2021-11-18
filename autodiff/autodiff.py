@@ -51,7 +51,7 @@ class Variable():
 
 
     def __rmul__(self, other):
-       return self.__mul__(seother)
+       return self.__mul__(other)
 
 
     def __sub__(self, other):
@@ -59,7 +59,7 @@ class Variable():
 
 
     def __rsub__(self, other):
-       return (-self).__sub__
+       return (-self).__add__(other)
 
 
     def __truediv__(self, other):
@@ -80,12 +80,13 @@ class Variable():
     def __rtruediv__(self, other):
         try:
            new_div = other.var / self.var
-           new_der = (other.der * self.var - self.der * other.var) / (self.var)**2
+           new_der = (other.der * self.var - other.var * self.der)/(self.var**2)
+           # new_der = (other.der * self.var - self.der * other.var) / (self.var)**2
            return Variable(new_div, new_der)
         except AttributeError:
-            new_div = self.var / other
+            new_div = other / self.var
             # base has different derivative, not sure of logic
-            new_der = self.der / other
+            new_der = other * (self.var**(-2)) * self.der
             return Variable(new_div, new_der)
 
 
