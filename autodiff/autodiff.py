@@ -65,12 +65,15 @@ class Variable():
     def __truediv__(self, other):
         try:
             new_div = self.var / other.var
-            new_der = (self.der * other.var - other.der * self.var) / (other.var)**2
+            new_der = (self.der * other.var - other.der * self.var) / other.var**2
             return Variable(new_div, new_der)
         except AttributeError:
-            new_div = self.var / other
-            new_der = self.der / other
-            return Variable(new_div, new_der)
+            if isinstance(other, int) or isinstance(other, float):
+                new_div = self.var / other
+                new_der = self.der / other
+                return Variable(new_div, new_der)
+            else:
+                raise TypeError(f"Input {other} is not valid.")
 
 
     def __neg__(self):
@@ -79,15 +82,16 @@ class Variable():
 
     def __rtruediv__(self, other):
         try:
-           new_div = other.var / self.var
-           new_der = (other.der * self.var - other.var * self.der)/(self.var**2)
-           # new_der = (other.der * self.var - self.der * other.var) / (self.var)**2
-           return Variable(new_div, new_der)
-        except AttributeError:
-            new_div = other / self.var
-            # base has different derivative, not sure of logic
-            new_der = other * (self.var**(-2)) * self.der
+            new_div = other.var / self.var
+            new_der = (other.der * self.var - other.var * self.der) / self.var**2
             return Variable(new_div, new_der)
+        except:
+            if isinstance(other, int) or isinstance(other, float):
+                new_div = other / self.var
+                new_der = other * (self.var**(-2)) * self.der
+                return Variable(new_div, new_der)
+            else:
+                raise TypeError(f"Input {other} is not valid.")
 
 
     def __lt__(self, other):
