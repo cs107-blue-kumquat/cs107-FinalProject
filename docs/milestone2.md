@@ -174,7 +174,7 @@ This class takes in inputs of a dictionary of variable names and their values, a
 
 The output of a SimpleAutoDiff object if printed would print the dictionary of values followed by the Function number,  Expression, Function Value and Function Gradient for each function in the list of functions. 
 
-![Drawing2](https://tva1.sinaimg.cn/large/008i3skNgy1gvmvhlerqej61h90u0t9l02.jpg)
+![Drawing2](Milestone2_Example.jpg)
 
 The reason this class is called SimpleAutoDiff is because currently it only works for functions of one variable however it can handle multiple functions.  In the future we hope to further our class so it can handle functions of more than one variable and return the partial derivatives with respect to each variable.  We also hope to implement a Jacobian attribute that would return a Jacobian of size n (representing the number of functions) by m (representing the number of variables) that has the partial derivatives for each function with respect to each variable in the dictionary of variables.  With this attribute users would be able to use the Jacobian from our class with Newton’s method and others. 
 
