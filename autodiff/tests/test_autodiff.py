@@ -1,7 +1,6 @@
 import pytest
 import numpy as np
-from autodiff import *
-
+from autodiff.autodiff import *
 
 def test_init():
     x = Variable(2)
