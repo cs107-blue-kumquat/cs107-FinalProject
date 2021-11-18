@@ -128,6 +128,7 @@ The core classes are:
 - `SimpleAutoDiff`
 
 **The Variable Class:**
+
 We implemented using a dual numbers class called Variable, we created a class in the same manner we reviewed creating a class for complex variables in class that would store the real part of the value and can be accessed through attribute .var  and the derivative through attribute .der (for example, with a dual number object x, x.var has the real value and x.der  has the derivative of x, where if x is a scalar, is just 1). This method of implementation allows us to store values for and access the real part and the dual part and allowed us to adjust how operations would best be implemented to service our user.
 
 
@@ -173,6 +174,8 @@ Here are the functions that we have implemented in the forward mode. We used `nu
 This class takes in inputs of a dictionary of variable names and their values, and a list of functions. The dictionary format takes in variable names as strings and their values. The list of functions takes in functions as strings.  Within SimpleAutoDiff, the string and corresponding value are transformed to Variable objects that are used when each function is evaluated. 
 
 The output of a SimpleAutoDiff object if printed would print the dictionary of values followed by the Function number,  Expression, Function Value and Function Gradient for each function in the list of functions. 
+
+*Below is an example of how a user might interact with the Variable class and the SimpleAutoDiff class*
 
 ![Drawing2](Milestone2_Example.jpg)
 
