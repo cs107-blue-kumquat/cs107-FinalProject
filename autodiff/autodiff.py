@@ -351,17 +351,14 @@ class SimpleAutoDiff:
         
         ---AutoDifferentiation---
         Value: {'x': 7, 'y': 2, 'z': 3}
-
         Function 1: 
         Expression = x**2
         Value = 49
         Gradient = 14
-
         Function 2: 
         Expression = cos(np.pi*y)
         Value = 1.0
         Gradient = 7.694682774887159e-16
-
         Function 3: 
         Expression = 8*z
         Value = 24
@@ -369,29 +366,45 @@ class SimpleAutoDiff:
         ---------------------------------------------------------------------------------------------------------------------
         
         """
+        
+        
         for func in list_funct:
             if not isinstance(func, str):
                 raise TypeError('Invalid function input.')
 
-        for key, val in enumerate(dict_val):
-            exec(val + "= Variable(dict_val[val])")
-            
         static_elem_funct = ['log', 'sqrt', 'exp', 'sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sinh', 'cosh', 'tanh', 'sigmoid']
-        
+        func_vals = []
+        dict_keys =[]
+        dict_vals = []
+        self.jacobian = np.zeros((len(list_funct), len(dict_val)))
+        count=0
 
+        for val, key in enumerate(dict_val):
+            dict_keys.append(key)
+            dict_vals.append(val)
+
+        for pair in range(0,len(dict_val)):
+            for _ in range(0,len(dict_val)):
+                if _ == count:
+                    exec(dict_keys[_] + "= Variable(dict_val[dict_keys[_]], der=1)")
+        #             print(count)
+                else:
+                    exec(dict_keys[_] + "= Variable(dict_val[dict_keys[_]], der=0)")
+            
+            for fun in range(0,len(list_funct)):
+                for elem_funct in static_elem_funct:
+                    if elem_funct in list_funct[fun]: # e.g. log is in log(x)
+                        func = 'Variable.' + list_funct[fun]
+                        break
+                    else:
+                        func = list_funct[fun]
+                func_vals.append(eval(func).var)
+                self.jacobian[fun,count]= eval(func).der
+            count+=1
+        self.functions = func_vals
         self.dict_val = dict_val
         self.list_funct = list_funct
-        self.functions = []
-
-        len_list_funct = len(list_funct)
-
-        # loop through all functions in argument list
-        for func in list_funct:
-            for elem_funct in static_elem_funct:
-                if elem_funct in func: # e.g. log is in log(x)
-                    func = 'Variable.' + func
-                    break
-            self.functions.append(eval(func))
+        
 
     
     def __repr__ (self):
@@ -399,7 +412,7 @@ class SimpleAutoDiff:
         added_output = ''
         added_output += f"Value: {self.dict_val}\n\n"
         for i in range(0, len(self.functions)):
-            added_output += f"Function {i+1}: \nExpression = {self.list_funct[i]}\nValue = {str(self.functions[i].var)}\nGradient = {str(self.functions[i].der)}\n\n"
+            added_output += f"Function {i+1}: \nExpression = {self.list_funct[i]}\nValue = {str(self.functions[i])}\nGradient = {str(self.jacobian[i])}\n\n"
 
         return output+added_output
 
@@ -407,7 +420,7 @@ class SimpleAutoDiff:
         output = '---AutoDifferentiation---\n'
         added_output = ''
         added_output += f"Value: {self.dict_val}\n\n"
-        for i in range(0, len(self.functions)):
-            added_output += f"Function {i+1}: \nExpression = {self.list_funct[i]}\nValue = {str(self.functions[i].var)}\nGradient = {str(self.functions[i].der)}\n\n"
+        for i in range(0, self.jacobian.shape[0]):
+            added_output += f"Function {i+1}: \nExpression = {self.list_funct[i]}\nValue = {str(self.functions[i])}\nGradient = {str(self.jacobian[i])}\n\n"
 
-        return output + added_output
+        return output+added_output
