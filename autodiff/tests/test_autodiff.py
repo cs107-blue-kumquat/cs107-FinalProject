@@ -45,6 +45,12 @@ def test_add():
     assert y.var == 3
     assert y.der == 1
     
+    # add a int/float to Variable object
+    x = Variable(1)
+    y = 2. + x + Variable(2)
+    assert y.var == 5
+    assert y.der == 2
+
     # add an invalid type of input to Variable object
     with pytest.raises(TypeError):
         x = Variable(1)
@@ -122,9 +128,9 @@ def test_mul():
 def test_truediv():
     # divide two Variable objects
     x = Variable(1)
-    y = x / Variable(2)
-    assert y.var == 1/2
-    assert y.der == 1/4
+    y = Variable(2) / x
+    assert y.var == 2
+    assert y.der == -1
 
     # divide a int/float by Variable object
     x = Variable(1)
@@ -270,13 +276,15 @@ def test_rpow():
         x = Variable(2)
         y = -4 ** x
         assert y.var == 4 ** 2
-        assert y.der == 4 ** 2 * np.log(4)
 
     x = Variable(2)
     y = 4 ** (x * 2)
     assert y.var == 4 ** (2 * 2)
     assert y.der == 4 ** (2 * 2) * np.log(4)
 
+    with pytest.raises(ValueError):
+        x = Variable(2)
+        y = "a" ** x
 
 def test_log():
     x = Variable(2)
@@ -299,8 +307,6 @@ def test_log():
 
     with pytest.raises(TypeError):
         y = Variable.log(2)
-        assert y.var == np.log(2)
-        assert y.der == 1 / 2
 
 
 def test_sqrt():
@@ -323,8 +329,6 @@ def test_sqrt():
 
     with pytest.raises(TypeError):
         y = Variable.sqrt(2)
-        assert y.var == np.sqrt(2)
-        assert y.der == 1/2 * 2 ** (-1/2)
 
 
 def test_exp():
@@ -386,7 +390,7 @@ def test_tan():
     assert y.der == 1/np.cos(np.pi/3)**2
 
     with pytest.raises(TypeError):
-        y = Variable.cos("a")
+        y = Variable.tan("a")
 
     y = Variable.tan(np.pi/3)
     assert y.var == np.tan(np.pi/3)
@@ -402,6 +406,10 @@ def test_arcsin():
     with pytest.raises(TypeError):
         y = Variable.arcsin("a")
 
+    with pytest.raises(TypeError):
+        x = Variable(-2)
+        y = Variable.arcsin(x)
+
     y = Variable.arcsin(1/2)
     assert y.var == np.arcsin(1/2)
     assert y.der == 1 / np.sqrt(1 - (1/2) ** 2)
@@ -415,6 +423,10 @@ def test_arccos():
 
     with pytest.raises(TypeError):
         y = Variable.arccos("a")
+
+    with pytest.raises(TypeError):
+        x = Variable(-2)
+        y = Variable.arccos(x)
 
     assert Variable.arccos(1/2) == np.arccos(1/2)
 
