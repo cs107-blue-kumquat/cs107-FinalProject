@@ -37,7 +37,7 @@ The jacobian matrix contains the first-order partial derivatives with respect to
 
 The user’s interactions with our package will be for educational and mathematical purposes as the use case of Automatic Differentiation is very flexible. Students can use our package to learn more about Automatic Differentiation and computational graphs. At-home users can use this package to solve basic differential equations like a calculator and companies can implement this package as a building block to conquer more complex differential equations. These are a few of the ways that users will interact with the BlueKumquatAutoDiff package. 
 
-Our package is available on Python Package Index (PyPI) and can be installed using this command:
+Our package is available on [Python Package Index (PyPI)](https://pypi.org/project/BlueKumquatAutoDiff/) and can be installed using this command:
 
 ```
 pip install BlueKumquatAutoDiff
@@ -56,7 +56,7 @@ git clone https://github.com/cs107-blue-kumquat/cs107-FinalProject.git
 4. Read the installation instructions 
 5. Run `python setup.py install`
 
-6. In your python file, put `from autodiff import *` at the top of the file.
+6. In your python file, put `from BlueKumquatAutoDiff.autodiff import *` at the top of the file.
 
 For some elementary functions we are not going to use an existing package and we created the code of the derivatives for some elementary functions like trigonometric functions.
 
