@@ -811,7 +811,7 @@ class Node():
         :internally appends derivatives of self and other and the return object to the .child_node
         """
         new_neg = Node(-self.var)
-        self.child_node.append(new_neg, -1)
+        self.child_node.append((new_neg, -1))
         return new_neg
 
 
@@ -933,7 +933,7 @@ class Node():
         :internally appends derivatives of self and other and the return object to the .child_node
         '''
         new_abs = Node(abs(self.var))
-        self.child_node.append(1, new_abs)
+        self.child_node.append((1, new_abs))
         return new_abs
 
 
@@ -1252,10 +1252,10 @@ class Node():
         """
         try:
             logistic_var = Node(1 / (1 + np.exp(-var.var)))
-            var.child_node.append((logistic_var, logistic_var * (1-logistic_var) * 1))
+            var.child_node.append((logistic_var, 1 / (1 + np.exp(-var.var)) * (1-(1 / (1 + np.exp(-var.var)) * 1))))
             return logistic_var
         except:
-            raise TypeError(f"Input {var} not valid.")    
+            raise TypeError(f"Input {var} not valid.")   
             
     def __str__(self):
         return f"value = {self.var}, derivative = {self.partials()}"
