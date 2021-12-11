@@ -250,12 +250,12 @@ def test_pow():
     x = Variable(2)
     y = x ** x
     assert y.var == 2 ** 2
-    assert y.der == 2 ** 2 * (np.log(2) * 1 / 1 + 2 / 2)
+    assert y.der == 2 * 2
 
     x = Variable(2)
     y = x ** (x * 2)
     assert y.var == 2 ** (2 * 2)
-    assert y.der == 2 ** (2 * 2) * (np.log(2) * 2 / 1 + (2 * 2) / 2)
+    assert y.der == (2 * 2)* 2 ** ((2 * 2)-1)
 
     with pytest.raises(TypeError):
         x = Variable(1)
