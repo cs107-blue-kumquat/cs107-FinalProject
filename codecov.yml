@@ -1,0 +1,4 @@
+ignore:
+	- "autodiff/demo.py"
+	- "setup.py"
+
