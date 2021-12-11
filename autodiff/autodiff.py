@@ -27,7 +27,7 @@ class Variable():
 
     def __add__(self, other):
         """
-        dunder method for adding an Variable object.
+        dunder method for adding a Variable object.
         
         :param self: Variable object.
         :param other: Variable object, or int/float, to be added to self.var.
@@ -47,7 +47,7 @@ class Variable():
 
     def __mul__(self, other):
         """
-        dunder method for multiplying an Variable object or constant.
+        dunder method for multiplying a Variable object or constant.
         
         :param self: Variable object.
         :param other: Variable object, or int/float, to be multiplied to self.var.
@@ -69,7 +69,7 @@ class Variable():
 
     def __radd__(self, other):
         """
-        dunder method for adding an Variable object and left object without __add__ mehtod.
+        dunder method for adding a Variable object and left object without __add__ mehtod.
         
         :param self: Variable object.
         :param other: an object that does not have an __add__ method or not implemented.
@@ -80,7 +80,7 @@ class Variable():
 
     def __rmul__(self, other):
         """
-        dunder method for multiplying an Variable object and left object without __mul__ mehtod.
+        dunder method for multiplying a Variable object and left object without __mul__ mehtod.
         
         :param self: Variable object.
         :param other: an object that does not have an __mul__ method or not implemented.
@@ -91,7 +91,7 @@ class Variable():
 
     def __sub__(self, other):
         """
-        dunder method for subtracting an Variable object or constant.
+        dunder method for subtracting a Variable object or constant.
         
         :param self: Variable object.
         :param other: Variable object, or int/float, to be subtracted from self.var.
@@ -102,7 +102,7 @@ class Variable():
 
     def __rsub__(self, other):
         """
-        dunder method for subtracting an Variable object and left object without __sub__ mehtod.
+        dunder method for subtracting a Variable object and left object without __sub__ mehtod.
         
         :param self: Variable object.
         :param other: an object that does not have an __sub__ method or not implemented.
@@ -113,7 +113,7 @@ class Variable():
 
     def __truediv__(self, other):
         """
-        dunder method for dividing an Variable object or constant.
+        dunder method for dividing a Variable object or constant.
         
         :param self: Variable object.
         :param other: Variable object, or int/float, to be divided from self.var.
@@ -134,7 +134,7 @@ class Variable():
 
     def __neg__(self):
         """
-        dunder method for taking the negative of an Variable object or constant.
+        dunder method for taking the negative of a Variable object or constant.
         
         :param self: Variable object.
         :param other: Variable object, or int/float, to be taken the negative.
@@ -145,7 +145,7 @@ class Variable():
 
     def __rtruediv__(self, other):
         """
-        dunder method for subtracting an Variable object and left object without __truediv__ mehtod.
+        dunder method for subtracting a Variable object and left object without __truediv__ mehtod.
         
         :param self: Variable object.
         :param other: an object that does not have an __truediv__ method or not implemented.
@@ -265,7 +265,7 @@ class Variable():
         """
         try:
             new_val = self.var ** other.var
-            new_der = self.var ** other.var * (np.log(self.var) * other.der / self.der + other.var / self.var)
+            new_der = other.var * self.var ** (other.var-1)
             return Variable(new_val, new_der)
         except:
             if isinstance(other, int):
