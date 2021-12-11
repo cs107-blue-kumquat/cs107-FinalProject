@@ -16,7 +16,7 @@ with open(path.join(this_directory, 'requirements.txt'),
 setup(
   name = 'BlueKumquatAutoDiff',
   packages = ['BlueKumquatAutoDiff'], 
-  version = '0.0.1',
+  version = '1.0.0',
   license='MIT',
   description = 'Package for Automatic Differentiation functions and objects',
   long_description=readme(),
