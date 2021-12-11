@@ -1,5 +1,5 @@
 import pytest
-from autodiff.autodiff import *
+from BlueKumquatAutoDiff.autodiff import *
 
 def test_init():
 	dict_val = {'x': 1,'y': 2}

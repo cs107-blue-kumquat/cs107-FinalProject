@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from autodiff.autodiff import *
+from BlueKumquatAutoDiff.autodiff import *
 
 
 def test_init():
