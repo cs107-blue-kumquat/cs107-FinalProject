@@ -3,7 +3,7 @@ import numpy as np
 from autodiff.autodiff import *
 
 
-def node_test_init():
+def test_node_init():
     x = Node(2)
     assert x.var == 2
     assert x.partials() == 1
@@ -13,20 +13,33 @@ def node_test_init():
     assert x.partials() == 1
 
     with pytest.raises(TypeError):
-        x = Variable("abc")
+        x = Node("abc")
 
 
-def node_test_str():
+def test_node_get_derivatives():
+    x = Node(2)
+    z = Node(3)
+    y = x * z
+    assert y.get_derivatives([x,z])[0] == 6
+    assert y.get_derivatives([x,z])[1][0] == 3
+    assert y.get_derivatives([x,z])[1][1] == 2
+    
+
+def test_node_partials():
+    pass
+
+
+def test_node_str():
     x = Node(2)
     assert str(x) == "value = 2, derivative = 1"
 
 
-def node_test_repr():
+def test_node_repr():
     x = Node(2)
     assert repr(x) == "value = 2, derivative = 1"
 
 
-def node_test_add():
+def test_node_add():
     # add two Node objects
     x = Node(1)
     y = x+Node(2)
@@ -37,19 +50,19 @@ def node_test_add():
     x = Node(1)
     y = 2. + x 
     assert y.var == 3
-    assert y.partials == 1
+    assert y.partials() == 1.
 
     # add a int/float to Node object
     x = Node(1)
     y = x + 2.
     assert y.var == 3
-    assert y.partials() == 1
+    assert y.partials() == 1.
     
     # add a int/float to Node object
     x = Node(1)
     y = 2. + x + Node(2)
     assert y.var == 5
-    assert y.partials == 1
+    assert y.partials() == 1
 
     # add an invalid type of input to Node object
     with pytest.raises(TypeError):
@@ -60,7 +73,8 @@ def node_test_add():
         x = Node(1)
         y = "a" + x
 
-def node_test_neg():
+
+def test_node_neg():
     x = Node(1)
     y = -x
     assert y.var == -1
@@ -68,7 +82,7 @@ def node_test_neg():
     assert x.partials() == -1
 
 
-def node_test_sub():
+def test_node_sub():
     # subtract two Node objects
     x = Node(1)
     y = x - Node(2)
@@ -93,7 +107,7 @@ def node_test_sub():
         y = x - "a"
 
 
-def node_test_mul():
+def test_node_mul():
     # multiply two Node objects
     x = Node(1)
     y = x * Node(2)
@@ -132,7 +146,7 @@ def node_test_mul():
         y = x * "a"
 
 
-def node_test_truediv():
+def test_node_truediv():
     # divide two Node objects
     x = Node(1)
     y = Node(2) / x
@@ -163,7 +177,7 @@ def node_test_truediv():
         y = "a" / x
 
 
-def node_test_lt():
+def test_node_lt():
     x = Node(1)
     y = Node(2)
     assert (x < y) == True
@@ -176,7 +190,7 @@ def node_test_lt():
         check = "a" < x
 
 
-def node_test_gt():
+def test_node_gt():
     x = Node(1)
     y = Node(2)
     assert (y > x) == True
@@ -189,7 +203,7 @@ def node_test_gt():
         check = "a" > x
 
 
-def node_test_le():
+def test_node_le():
     x = Node(1)
     y = Node(2)
     assert (x <= y) == True
@@ -202,7 +216,7 @@ def node_test_le():
         check = "a" <= x
 
 
-def node_test_ge():
+def test_node_ge():
     x = Node(1)
     y = Node(2)
     assert (y >= x) == True
@@ -215,7 +229,7 @@ def node_test_ge():
         check = "a" >= x
 
 
-def node_test_eq():
+def test_node_eq():
     x = Node(1)
     y = Node(2)
     assert (y == x) == False
@@ -225,7 +239,7 @@ def node_test_eq():
         check = x == 1
 
 
-def node_test_ne():
+def test_node_ne():
     x = Node(1)
     y = Node(2)
     assert (y != x) == True
@@ -235,7 +249,7 @@ def node_test_ne():
         check = x != 1
 
 
-def node_test_abs():
+def test_node_abs():
     x = abs(Node(1))
     assert x.var == 1
     assert x.partials() == 1
@@ -245,7 +259,7 @@ def node_test_abs():
     assert y.partials() == 1
 
 
-def node_test_pow():
+def test_node_pow():
     x = Node(2)
     y = x ** 4
     assert y.var == 2 ** 4
@@ -279,7 +293,7 @@ def node_test_pow():
         check = x ** -1.2
 
 
-def node_test_rpow():
+def test_node_rpow():
     x = Node(2)
     y = 4 ** x
     assert y.var == 4 ** 2
@@ -294,13 +308,13 @@ def node_test_rpow():
     x = Node(2)
     y = 4 ** (x * 2)
     assert y.var == 4 ** (2 * 2)
-    assert x.partials() == 4 ** (2 * 2) * np.log(4)
+    assert x.partials() == 2 ** (4 * 2 + 1) * np.log(4)
 
     with pytest.raises(ValueError):
         x = Node(2)
         y = "a" ** x
 
-def node_test_log():
+def test_node_log():
     x = Node(2)
     y = Node.log(x)
     assert y.var == np.log(2)
@@ -325,7 +339,7 @@ def node_test_log():
         y = Node.log(2)
 
 
-def node_test_sqrt():
+def test_node_sqrt():
     x = Node(2)
     y = Node.sqrt(x)
     assert y.var == np.sqrt(2)
@@ -334,8 +348,7 @@ def node_test_sqrt():
     x = Node(2)
     y = Node.sqrt(2 * x)
     assert y.var == np.sqrt(2 * 2)
-    assert x.partials() == 1/ np.sqrt(2) * 1/2 * 2 ** (-1/2)
-
+    assert x.partials() == 1/ np.sqrt(2) * 2 ** (-1/2)
     with pytest.raises(ValueError):
         x = Node(-2)
         y = Node.sqrt(x)
@@ -347,7 +360,7 @@ def node_test_sqrt():
         y = Node.sqrt(2)
 
 
-def node_test_exp():
+def test_node_exp():
     x = Node(2)
     y = Node.exp(x)
     assert y.var == np.exp(2)
@@ -362,11 +375,10 @@ def node_test_exp():
         y = Node.exp("a")
 
     y = Node.exp(2)
-    assert y.var == np.exp(2)
-    assert x.partials() == np.exp(2)
+    assert y == np.exp(2)
 
 
-def node_test_sin():
+def test_node_sin():
     x = Node(np.pi/2)
     y = Node.sin(x)
     assert y.var == np.sin(np.pi/2)
@@ -381,11 +393,10 @@ def node_test_sin():
         y = Node.sin("a")
 
     y = Node.sin(np.pi/2)
-    assert y.var == np.sin(np.pi/2)
-    assert x.partials() == np.cos(np.pi/2)
+    assert y == np.sin(np.pi/2)
 
 
-def node_test_cos():
+def test_node_cos():
     x = Node(np.pi/2)
     y = Node.cos(x)
     assert y.var == np.cos(np.pi/2)
@@ -395,11 +406,10 @@ def node_test_cos():
         y = Node.cos("a")
 
     y = Node.cos(np.pi)
-    assert y.var == np.cos(np.pi)
-    assert x.partials() == -np.sin(np.pi)
+    assert y == np.cos(np.pi)
 
 
-def node_test_tan():
+def test_node_tan():
     x = Node(np.pi/3)
     y = Node.tan(x)
     assert y.var == np.tan(np.pi/3)
@@ -409,11 +419,10 @@ def node_test_tan():
         y = Node.tan("a")
 
     y = Node.tan(np.pi/3)
-    assert y.var == np.tan(np.pi/3)
-    assert x.partials() == 1/np.cos(np.pi/3)**2
+    assert y == np.tan(np.pi/3)
 
 
-def node_test_arcsin():
+def test_node_arcsin():
     x = Node(1/2)
     y = Node.arcsin(x)
     assert y.var == np.arcsin(1/2)
@@ -427,11 +436,10 @@ def node_test_arcsin():
         y = Node.arcsin(x)
 
     y = Node.arcsin(1/2)
-    assert y.var == np.arcsin(1/2)
-    assert x.partials() == 1 / np.sqrt(1 - (1/2) ** 2)
+    assert y == np.arcsin(1/2)
 
 
-def node_test_arccos():
+def test_node_arccos():
     x = Node(1/2)
     y = Node.arccos(x)
     assert y.var == np.arccos(1/2)
@@ -447,8 +455,7 @@ def node_test_arccos():
     assert Node.arccos(1/2) == np.arccos(1/2)
 
 
-
-def node_test_arctan():
+def test_node_arctan():
     x = Node(1/2)
     y = Node.arctan(x)
     assert y.var == np.arctan(1/2)
@@ -460,7 +467,7 @@ def node_test_arctan():
     assert Node.arctan(1/2) == np.arctan(1/2)
 
 
-def node_test_sinh():
+def test_node_sinh():
     x = Node(1/2)
     y = Node.sinh(x)
     assert y.var == np.sinh(1/2)
@@ -472,7 +479,7 @@ def node_test_sinh():
     assert Node.sinh(1/2) == np.sinh(1/2)
 
 
-def node_test_cosh():
+def test_node_cosh():
     x = Node(1/2)
     y = Node.cosh(x)
     assert y.var == np.cosh(1/2)
@@ -484,18 +491,18 @@ def node_test_cosh():
     assert Node.cosh(1/2) == np.cosh(1/2)
 
 
-def node_test_tanh():
+def test_node_tanh():
     x = Node(1/2)
     y = Node.tanh(x)
     assert y.var == np.tanh(1/2)
-    assert yx
+    assert y.partials() == 1
     with pytest.raises(TypeError):
         y = Node.tanh("a")
 
     assert Node.tanh(1/2) == np.tanh(1/2)
 
 
-def node_test_sigmoid():
+def test_node_sigmoid():
     x = Node(2)
     y = Node.sigmoid(x)
     assert y.var == 1 / (1 + np.exp(-2))
