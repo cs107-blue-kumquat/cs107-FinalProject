@@ -4,11 +4,11 @@ import re
 class Variable():
     def __init__(self, var, der = 1):
         """
-        Initialize a Variable object with follow attributes:
-        var: attribute representing evaluated value 
-        der: attribute representing evaluated derivative/gradient
-        
+        Initialize a Variable object with following attributes. 
         Derivative is 1 by default if not specified.
+
+        :param var: attribute representing evaluated value.
+        :param der: attribute representing evaluated derivative/gradient.        
         """
         if isinstance(var, int) or isinstance(var, float):
             self.var = var
@@ -570,8 +570,6 @@ class SimpleAutoDiff:
         ---------------------------------------------------------------------------------------------------------------------
         
         """
-        
-        
         for func in list_funct:
             if not isinstance(func, str):
                 raise TypeError('Invalid function input.')
@@ -581,7 +579,7 @@ class SimpleAutoDiff:
         dict_keys =[]
         dict_vals = []
         self.jacobian = np.zeros((len(list_funct), len(dict_val)))
-        count=0
+        count = 0
 
         for val, key in enumerate(dict_val):
             dict_keys.append(key)
@@ -591,7 +589,6 @@ class SimpleAutoDiff:
             for _ in range(0,len(dict_val)):
                 if _ == count:
                     exec(dict_keys[_] + "= Variable(dict_val[dict_keys[_]], der=1)")
-        #             print(count)
                 else:
                     exec(dict_keys[_] + "= Variable(dict_val[dict_keys[_]], der=0)")
             
@@ -608,7 +605,6 @@ class SimpleAutoDiff:
         self.functions = func_vals
         self.dict_val = dict_val
         self.list_funct = list_funct
-        
 
     
     def __repr__ (self):
@@ -634,11 +630,10 @@ class Node():
     def __init__(self, var):
         """
         Initialize a Node object with follow attributes:
-        var: attribute representing evaluated value 
         child_node: a list that holds tuples of all depending Nodes and derivatives
-        derivative: attribute representing evaluated derivative/gradient
+        derivative: attribute representing evaluated derivative/gradient. Derivative is 1 by default.
         
-        Derivative is 1 by default.
+        :param var: attribute representing evaluated value.
         """
         if isinstance(var, int) or isinstance(var, float):
             self.var = var
@@ -646,15 +641,16 @@ class Node():
             self.derivative = None
         else:
             raise TypeError("Input is not a real number.")
-            
+        
+
     def get_derivatives(self, inputs):
         """
-        Method to get derivatives for each variable used in the function
-        
+        Method to get derivatives for each variable used in the function.
         This function uses:
         var_val: a variable which stored the function values
         der_list: a list of derivatives with respect to each variable
 
+        :param inputs: the list of input functions.
         """
         # self.der = 1
         var_val = self.var
@@ -663,9 +659,9 @@ class Node():
             
     def partials(self):
         """
-        Method to compute derivative for variables
-        uses self.derivative to determine whether to use list comprehension 
-        for finding partial derivatives with respect to each function
+        Method to compute derivative for variables.
+        Uses self.derivative to determine whether to use list comprehension.
+        For finding partial derivatives with respect to each function.
         """
         if len(self.child_node) == 0:
             return 1
@@ -676,19 +672,15 @@ class Node():
             return self.derivative
 
 
-
     def __add__(self, other):
         """
         dunder method for adding a Node object.
+        internally appends derivatives of self and other and the return object to the .child_node.
         
         :param self: Node object.
         :param other: Node object, or int/float, to be added to self.var.
         :return: Node object with value of the sum of self and other.
-
-        :internally appends derivatives of self and other and the return object to the .child_node
-
         """
-
         try:
             new_add = Node(self.var + other.var)
             self.child_node.append((new_add, 1))
@@ -706,17 +698,14 @@ class Node():
 
 
     def __mul__(self, other):
-
         """
         dunder method for multiplying a Node object or constant.
-        
+        internally appends derivatives of self and other and the return object to the .child_node.
+
         :param self: Node object.
         :param other: Node object, or int/float, to be multiplied to self.var.
         :return: Node object with value of the product of self and other.
-
-        :internally appends derivatives of self and other and the return object to the .child_node
         """
-
         try:
             new_mul = Node(other.var * self.var)
             self.child_node.append((new_mul, other.var))
@@ -755,7 +744,6 @@ class Node():
 
 
     def __sub__(self, other):
-
         """
         dunder method for subtracting a Node object or constant.
         
@@ -780,12 +768,11 @@ class Node():
     def __truediv__(self, other):
         """
         dunder method for dividing a Node object or constant.
+        internally appends derivatives of self and other and the return object to the .child_node.
         
         :param self: Node object.
         :param other: Node object, or int/float, to be divided from self.var.
         :return: Node object with value and the fraction of self and other.
-
-        :internally appends derivatives of self and other and the return object to the .child_node
         """
         try:
             new_div = Node(self.var / other.var)
@@ -804,11 +791,10 @@ class Node():
     def __neg__(self):
         """
         dunder method for taking the negative of an Node object or constant.
+        internally appends derivatives of self and other and the return object to the .child_node.
         
         :param self: Node object.
         :return: Node object with negative value of itself.
-
-        :internally appends derivatives of self and other and the return object to the .child_node
         """
         new_neg = Node(-self.var)
         self.child_node.append((new_neg, -1))
@@ -818,12 +804,11 @@ class Node():
     def __rtruediv__(self, other):
         """
         dunder method for dividing a Node object and left other object without __truediv__ method.
-        
+        internally appends derivatives of self and other and the return object to the .child_node.
+
         :param self: Node object.
         :param other: an object that does not have an __truediv__ method or not implemented.
         :return: Node object with value of the fraction of self and other.
-
-        :internally appends derivatives of self and other and the return object to the .child_node
         """
         try:
             new_div = Node(other.var / self.var)
@@ -927,10 +912,10 @@ class Node():
 
         '''
         dunder method for absolute value.
+        internally appends derivatives of self and other and the return object to the .child_node.
+
         :param self: Node object.
         :return: Node object with value of the absolute value of self.
-
-        :internally appends derivatives of self and other and the return object to the .child_node
         '''
         new_abs = Node(abs(self.var))
         self.child_node.append((1, new_abs))
@@ -941,12 +926,11 @@ class Node():
 
         """
         dunder method for taking Variable object to the value of other object's power.
-        
+        internally appends derivatives of self and other and the return object to the .child_node.
+
         :param self: Node object.
         :param other: Node object, or int/float, to the power of.
         :return: Node object with value of the power of self with power of other's value.
-
-        :internally appends derivatives of self and other and the return object to the .child_node
         """
 
         try:
@@ -967,30 +951,28 @@ class Node():
 
         """
         dunder method for taking the other object to the Node object's power.
+        internally appends derivative of self and the return object to self.child_node.
         
         :param self: Node object.
         :param other: Node object, or int/float, as the base.
         :return: Node object with value of the power of other with power of self's value.
-
-        :internally appends derivative of self and the return object to self.child_node
         """
         try:
             new_val = Node(other ** self.var)
         except:
             raise ValueError("{} must be a number.".format(other))
         self.child_node.append((new_val, other**self.var * np.log(other)))
-        return Node(new_val, new_der)
+        return new_val
 
         
     @staticmethod
     def log(var):
         """
         takes the log of the Node object.
+        internally appends derivative of var and the return object to var.child_node.
         
         :param var: Node object.
         :return: Node object with value of the natural log of var.var
-
-        :internally appends derivative of var and the return object to var.child_node
         """
         try:
             if var.var <= 0:
@@ -1004,14 +986,12 @@ class Node():
 
     @staticmethod
     def sqrt(var):
-
         """
         takes the square root of the Node object.
+        internally appends derivative of var and the return object to var.child_node.
         
         :var: Node object.
         :return: Node object with value of the square root of var.
-
-        :internally appends derivative of var and the return object to var.child_node
         """
         if var < 0:
             raise ValueError("Square root can only takes positive values.")
@@ -1026,14 +1006,12 @@ class Node():
 
     @staticmethod
     def exp(var):
-
         """
         natural exponential function with the value of Node object as the power.
-        
+        internally appends derivative of var and the return object to var.child_node.
+
         :var: Node object.
         :return: Node object with value of natural exponential function with power var.
-
-        :internally appends derivative of var and the return object to var.child_node
         """
         try:
             new_val = Node(np.exp(var.var))
@@ -1048,14 +1026,12 @@ class Node():
 
     @staticmethod
     def sin(var):
-
         """
         calculates the sine of Node object.
-        
+        internally appends derivative of var and the return object to var.child_node.
+
         :var: Node object.
         :return: Node object with value of the sine of var.
-
-        :internally appends derivative of var and the return object to var.child_node
         """
         try:
             new_val = Node(np.sin(var.var))
@@ -1070,17 +1046,15 @@ class Node():
 
     @staticmethod
     def cos(var):
-
         """
         calculates the cosine of Node object.
-        
+        internally appends derivative of var and the return object to var.child_node
+
         :var: Node object.
         :return: Node object with value of the cosine of var.
-
-        :internally appends derivative of var and the return object to var.child_node
         """
         try:
-            new_val = np.cos(var.var)
+            new_val = Node(np.cos(var.var))
             var.child_node.append((new_val, 1 * -np.sin(var.var)))
             return new_val
         except:
@@ -1092,14 +1066,12 @@ class Node():
     
     @staticmethod
     def tan(var):
-
         """
         calculates the tangent of Node object.
-        
+        internally appends derivative of var and the return object to var.child_node.
+
         :var: Node object.
         :return: Node object with value of the tangent of var.
-
-        :internally appends derivative of var and the return object to var.child_node
         """
         try:
             new_val = Node(np.tan(var.var))
@@ -1114,14 +1086,12 @@ class Node():
 
     @staticmethod
     def arcsin(var):
-
         """
         calculates the arcsine of Node object.
-        
+        internally appends derivative of var and the return object to var.child_node.
+
         :var: Node object.
         :return: Node object with value of the arcsine of var.
-
-        :internally appends derivative of var and the return object to var.child_node
         """
         try:
             if var.var > 1 or var.var < -1:
@@ -1138,14 +1108,12 @@ class Node():
 
     @staticmethod
     def arccos(var):
-
         """
         calculates the arccosine of Node object.
-        
+        internally appends derivative of var and the return object to var.child_node
+
         :var: Node object.
         :return: Node object with value of the arccosine of var.
-
-        :internally appends derivative of var and the return object to var.child_node
         """
 
         try:
@@ -1164,14 +1132,12 @@ class Node():
 
     @staticmethod
     def arctan(var):
-
         """
         calculates the arctangent of Node object.
-        
+        internally appends derivative of var and the return object to var.child_node
+
         :var: Node object.
         :return: Node object with value of the arctangent of var.
-
-        :internally appends derivative of var and the return object to var.child_node
         """
         try:
             new_val = Node(np.arctan(var.var))
@@ -1187,11 +1153,10 @@ class Node():
     def sinh(var):
         """
         calculates the hyperbolic sine of Node object.
-        
+        internally appends derivative of var and the return object to var.child_node
+
         :var: Node object.
         :return: Node object with value and derivative of the hyperbolic sine of var.
-
-        :internally appends derivative of var and the return object to var.child_node
         """
         try:
             new_val = Node(np.sinh(var.var))
@@ -1204,14 +1169,12 @@ class Node():
 
     @staticmethod
     def cosh(var):
-
         """
         calculates the hyperbolic cosine of Node object.
-        
+        internally appends derivative of var and the return object to var.child_node
+
         :param var: Node object.
         :return: Node object with value and derivative of the hyperbolic cosine of var.
-
-        :internally appends derivative of var and the return object to var.child_node
         """
         try:
             new_val = Node(np.cosh(var.var))
@@ -1227,11 +1190,10 @@ class Node():
     def tanh(var):
         """
         calculates the hyperbolic tangent of Node object.
-        
+        internally appends derivative of var and the return object to var.child_node
+
         :param var: Node object.
         :return: Node object with value and derivative of the hyperbolic cosine of var.
-
-        :internally appends derivative of var and the return object to var.child_node
         """
         try:
             new_val = Node(np.tanh(var.var))
@@ -1244,11 +1206,10 @@ class Node():
     def sigmoid(var):
         """
         calculates the sigmoid/logistic function of Node object.
-        
+        internally appends derivative of var and the return object to var.child_node
+
         :param var: Node object.
         :return: Node object with value of the sigmoid/logistic function of var.
-
-        :internally appends derivative of var and the return object to var.child_node
         """
         try:
             logistic_var = Node(1 / (1 + np.exp(-var.var)))
@@ -1257,6 +1218,7 @@ class Node():
         except:
             raise TypeError(f"Input {var} not valid.")   
             
+
     def __str__(self):
         return f"value = {self.var}, derivative = {self.partials()}"
 
@@ -1317,12 +1279,13 @@ class Reverse:
         self.der = []
         self.list_funct = list_funct
 
-        functions = ['sqrt', 'exp', 'log', 'tan', 'sin', 'cos', 'arcsin', 'arccos', 'arctan', 'sinh', 'cosh', 'tanh']
+        static_elem_funct = ['log', 'sqrt', 'exp', 'sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sinh', 'cosh', 'tanh', 'sigmoid']
 
         for func in list_funct:
-            for i in functions:
+            for i in static_elem_funct:
                 if i in func:
                     func = re.sub(i + r'\(', 'Node.' + i + '(', func)
+                    func = re.sub('arcNode.', 'arc', func)
 
             for var_name, var_value in dict_val.items():
                 exec(f'{var_name} = Node(float(var_value))')
@@ -1344,6 +1307,7 @@ class Reverse:
 
         return output+added_output
 
+
     def __str__(self):
         output = '---Reverse Differentiation---\n'
         added_output = ''
@@ -1351,4 +1315,3 @@ class Reverse:
             added_output += f"Function {i+1}: \nExpression = {self.list_funct[i]}\nValue = {str(self.var[i])}\nGradient = {str(self.der[i])}\n\n"
 
         return output+added_output
-
