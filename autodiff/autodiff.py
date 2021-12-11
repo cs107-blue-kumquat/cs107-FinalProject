@@ -1257,6 +1257,13 @@ class Node():
         except:
             raise TypeError(f"Input {var} not valid.")    
             
+    def __str__(self):
+        return f"value = {self.var}, derivative = {self.partials()}"
+
+
+    def __repr__(self):
+        return f"value = {self.var}, derivative = {self.partials()}"
+            
             
             
 class Reverse:
